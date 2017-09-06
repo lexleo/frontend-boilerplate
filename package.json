@@ -1,0 +1,24 @@
+{
+  "name": "frontend-boilerplate",
+  "version": "1.0.0",
+  "description": "lexleo frontend boilerplate",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "webpack": "^3.5.5"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lexleo/frontend-boilerplate.git"
+  },
+  "author": "Alexey Shilyakin aka lexleo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lexleo/frontend-boilerplate/issues"
+  },
+  "homepage": "https://github.com/lexleo/frontend-boilerplate#readme"
+}
