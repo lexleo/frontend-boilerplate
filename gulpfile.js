@@ -33,6 +33,10 @@ const paths = {
     scripts: {
         src: 'src/scripts/**/*.*',
         dest: 'build/assets/scripts/'
+    },
+    fonts: {
+        src: 'src/fonts/**/*.*',
+        dest: 'build/assets/fonts'
     }
 }
 
@@ -94,22 +98,31 @@ function images() {
         .pipe(gulp.dest(paths.images.dest));
 }
 
+// move fonts to build
+function fonts() {
+    return gulp.src(paths.fonts.src)
+        .pipe(gulp.dest(paths.fonts.dest));
+}
+
+
 
 exports.templates = templates;
 exports.styles = styles;
 exports.clean = clean;
 exports.images = images;
+exports.fonts = fonts;
+
 
 
 // Tasks
 gulp.task('default', gulp.series(
-    gulp.parallel(styles, templates, images, scripts),
+    gulp.parallel(styles, templates, images, fonts, scripts),
     gulp.parallel(watch, server)
 ));
 
 gulp.task('build', gulp.series(
     clean,
-    gulp.parallel(styles, templates, images, scripts)
+    gulp.parallel(styles, templates, images, fonts, scripts)
 ));
 
 
