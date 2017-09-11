@@ -1,24 +1,26 @@
 const gulp = require('gulp'),
-    pug = require('gulp-pug');
-    del = require('del');
-    rename = require('gulp-rename');
-    browserSync = require('browser-sync').create(),
+      pug = require('gulp-pug'),
+      del = require('del'),
+      rename = require('gulp-rename'),
+      plumber = require('gulp-plumber'),
+      browserSync = require('browser-sync').create();
 
-    svgSprite = require('gulp-svg-sprite'),
-	svgmin = require('gulp-svgmin'),
-	cheerio = require('gulp-cheerio'),
-	replace = require('gulp-replace');
-
+// sprites
+const svgSprite = require('gulp-svg-sprite'),
+	  svgmin = require('gulp-svgmin'),
+	  cheerio = require('gulp-cheerio'),
+	  replace = require('gulp-replace');
 
 
 // styles
-const sass = require('gulp-sass');
-const sourcemaps = require('gulp-sourcemaps');
+const sass = require('gulp-sass'),
+      sourcemaps = require('gulp-sourcemaps'),
+      sassLint = require('gulp-sass-lint');
 
 // scripts
-const gulpWebpack = require('gulp-webpack');
-const webpack = require('webpack');
-const webpackConfig = require('./webpack.config.js');
+const gulpWebpack = require('gulp-webpack'),
+      webpack = require('webpack'),
+      webpackConfig = require('./webpack.config.js');
 
 // paths
 const paths = {
@@ -63,6 +65,7 @@ function templates() {
 // scss
 function styles() {
     return gulp.src(paths.styles.css)
+        .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(sass({outputStyle: 'compressed'}))
         .pipe(sourcemaps.write())
@@ -70,6 +73,13 @@ function styles() {
         .pipe(gulp.dest(paths.styles.dest))
 }
 
+// sass-lint
+function lintSass () {
+  return gulp.src(paths.styles.src)
+    .pipe(sassLint())
+    .pipe(sassLint.format())
+    .pipe(sassLint.failOnError())
+}
 
 // clean docs
 function clean() {
@@ -123,20 +133,22 @@ exports.styles = styles;
 exports.clean = clean;
 exports.images = images;
 exports.fonts = fonts;
+exports.lintSass = lintSass;
 
 
 
 // Tasks
 gulp.task('default', gulp.series(
+    //lintSass,
     gulp.parallel(styles, templates, images, fonts, scripts),
     gulp.parallel(watch, server)
 ));
 
-gulp.task('docs', gulp.series(
+gulp.task('build', gulp.series(
     clean,
+    lintSass,
     gulp.parallel(styles, templates, images, fonts, scripts)
 ));
-
 
 gulp.task('sprite', function () {
 	return gulp.src(paths.images.icons.src + '*.svg')
